@@ -11,5 +11,6 @@ namespace FileUploadFrameworkAPI.Models
         public string FileSize { get; set; }
         public string SourcePath { get; set; }
         public string StatusMessage { get; set; }
+        public bool IsSuccessfull { get; set; }
     }
 }

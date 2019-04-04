@@ -19,7 +19,7 @@ namespace FileUploadFrameworkAPI.Controllers
         [Route("api/UploadFiles/UploadFilesToLocalFolder")]
         public IHttpActionResult UploadFilesToLocalFolder()
         {
-            List<FileStatusModel> fileStatusModels = new List<FileStatusModel>();
+            FileStatusModel fileStatusModel = new FileStatusModel();
 
             try
             {
@@ -29,15 +29,14 @@ namespace FileUploadFrameworkAPI.Controllers
                 {
                     HttpPostedFileBase filebase = new HttpPostedFileWrapper(HttpContext.Current.Request.Files[fileTagName]);
 
-                    var fsm = UploadFileHelper.ToLocalFolderHelper(filebase);
-                    fileStatusModels.Add(fsm);
+                    fileStatusModel = UploadFileHelper.ToLocalFolderHelper(filebase);
                 }
 
-                return Ok(fileStatusModels);
+                return Ok(fileStatusModel);
             }
             catch (Exception ex)
             {
-                return Ok(fileStatusModels);
+                return Ok(fileStatusModel);
             }
         }
     }

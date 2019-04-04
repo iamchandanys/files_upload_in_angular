@@ -1,0 +1,74 @@
+<div style="padding: 12px;">
+
+  <div class="card">
+    <div class="card-header">
+      File Upload To Local Folder
+    </div>
+
+    <div class="card-body bs-card-body">
+
+      <table style="width: 100%;">
+        <tr>
+          <td width="50%">
+            <input type="file" id="FileUpload" (change)="onFileChange($event)" multiple accept=".pdf, .xlsx, .img" />
+
+            <p class="text-danger" style="font-weight: 600; margin-top: 6px;">
+              Only .xlsx, .img & .pdf files are allowed.
+            </p>
+
+            <button type="button" class="btn btn-primary btn-sm btn-upload" (click)="UploadFile()">Upload</button>
+          </td>
+
+          <td width="50%">
+            <p style="font-weight: 600;">
+              Uploading Files:
+              {{filesInProgress}}
+            </p>
+            <div class="progress bs-progress">
+              <div class="progress-bar progress-bar-success progress-bar-striped progress-bar-animated"
+                role="progressbar" [attr.aria-valuenow]="progress" aria-valuemin="0" aria-valuemax="100"
+                [style.width]="(progress/100)*100 + '%'">
+                <span *ngIf="progress > 0">{{progress}}%</span>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <br/>
+
+      <table class="table">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">File Name</th>
+            <th scope="col">File Size</th>
+            <th scope="col">Source Path</th>
+            <th scope="col">Status Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let x of fileStatus">
+            <td [ngClass]="{ 'table-success' : x.IsSuccessfull, 'table-danger' : !x.IsSuccessfull }">
+              {{x.FileName}}
+            </td>
+            <td [ngClass]="{ 'table-success' : x.IsSuccessfull, 'table-danger' : !x.IsSuccessfull }">
+              {{x.FileSize}}
+            </td>
+            <td [ngClass]="{ 'table-success' : x.IsSuccessfull, 'table-danger' : !x.IsSuccessfull }">
+              <a href="#">{{x.SourcePath}}</a>
+            </td>
+            <td [ngClass]="{ 'table-success' : x.IsSuccessfull, 'table-danger' : !x.IsSuccessfull }">
+              {{x.StatusMessage}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <div class="card-footer text-muted">
+      Footer comes here...
+    </div>
+  </div>
+
+</div>

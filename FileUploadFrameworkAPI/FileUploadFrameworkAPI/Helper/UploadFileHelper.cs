@@ -33,7 +33,7 @@ namespace FileUploadFrameworkAPI.Helper
                 {
                     directoryPath = Path.Combine(uploadFolderPath, DateTime.Now.ToString(WebConfigurationManager.AppSettings["DateFormat"].ToString(), CultureInfo.InvariantCulture));
 
-                    if (fileBase.ContentLength > 2000000)
+                    if (fileBase.ContentLength < 2000000)
                     {
                         if (fileExtension == ".img" || fileExtension == ".pdf" || fileExtension == ".xlsx")
                         {
@@ -50,30 +50,36 @@ namespace FileUploadFrameworkAPI.Helper
 
                                 fsm.SourcePath = sourcePath;
                                 fsm.StatusMessage = "Uploaded Successfully!";
+                                fsm.IsSuccessfull = true;
                             }
                             else
                             {
                                 fsm.StatusMessage = "The specified file path is too long. The fully qualified file path must be less than 260 characters.";
+                                fsm.IsSuccessfull = false;
                             }
                         }
                         else
                         {
                             fsm.StatusMessage = "Only Image, PDF and Excel files are allowed.";
+                            fsm.IsSuccessfull = false;
                         }
                     }
                     else
                     {
                         fsm.StatusMessage = "Only 2Mb files are allowed.";
+                        fsm.IsSuccessfull = false;
                     }
                 }
                 else
                 {
                     fsm.StatusMessage = "Invalid File.";
+                    fsm.IsSuccessfull = false;
                 }
             }
             catch (Exception ex)
             {
                 fsm.StatusMessage = ex.Message;
+                fsm.IsSuccessfull = false;
             }
 
             return fsm;
