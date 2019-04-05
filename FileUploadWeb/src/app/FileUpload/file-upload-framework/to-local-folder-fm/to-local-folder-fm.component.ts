@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpRequest, HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
+import { HttpRequest, HttpClient, HttpEventType, HttpResponse, HttpHeaders } from '@angular/common/http';
 
 import * as $ from 'jquery';
 import { FileStatus } from '../models/file-status.model';
@@ -14,9 +14,8 @@ export class ToLocalFolderFmComponent implements OnInit {
 
   constructor(private httpClient: HttpClient) { }
 
-  selectedFiles: File[] = [];
   progress: number;
-  filesInProgress: string;
+  selectedFiles: File[] = [];
   fileStatus: FileStatus[] = [];
 
   ngOnInit() {
@@ -41,40 +40,48 @@ export class ToLocalFolderFmComponent implements OnInit {
 
   UploadFile() {
     if (this.selectedFiles.length > 0) {
+      this.progress = 0;
 
       for (let selFiles of this.selectedFiles) {
-        this.filesInProgress = selFiles.name;
+        var sizeConversion = (selFiles.size / 1024) / 1024;
+        let extension = selFiles.name.split('.').pop();
 
-        const formData = new FormData();
-        formData.append('UploadFile_' + selFiles.name, selFiles);
+        let fileStat = new FileStatus();
+        fileStat.FileName = selFiles.name;
+        fileStat.FileSize = sizeConversion + " Mb";
 
-        const req = new HttpRequest('POST', 'http://localhost:50182/api/UploadFiles/UploadFilesToLocalFolder', formData, { reportProgress: true });
+        if (selFiles.size < 50000000) {
 
-        this.httpClient.request(req).subscribe(
-          (event: any) => {
-            if (event.type === HttpEventType.UploadProgress) {
-              // This is an upload progress event. Compute and show the % done.
-              this.progress = Math.round(98 * event.loaded / event.total);
-            } else if (event instanceof HttpResponse) {
-              // Comes here only when the upload is completly done without any error.
-              this.progress = 100;
-              console.log('File is completely uploaded!');
+          if (extension == 'xlsx' || extension == 'pdf' || extension == 'jpg' || extension == 'jpeg' || extension == "png") {
 
-              console.log(event);
+            const formData = new FormData();
+            formData.append('UploadFile_' + selFiles.name, selFiles);
 
-              if (event.body)
-                this.fileStatus.push(event.body);
-            }
-          },
-          () => {
+            const req = new HttpRequest('POST', 'http://localhost:50182/api/UploadFiles/UploadFilesToLocalFolder', formData, { reportProgress: true });
 
-          },
-          () => {
-            // this.progress = 0;
+            this.httpClient.request(req).subscribe(
+              (event: any) => {
+                if (event.type === HttpEventType.UploadProgress) {
+                  // This is an upload progress event. Compute and show the % done.
+                  this.progress = Math.round(100 * event.loaded / event.total);
+                } else if (event instanceof HttpResponse) {
+                  // Comes here only when the upload is completly done without any error.
+                  if (event.body)
+                    this.fileStatus.push(event.body);
+                }
+              }
+            )
+          } else {
+            fileStat.StatusMessage = "Only Image(.jpg/.jpeg), PDF and Excel files are allowed.";
+            fileStat.IsSuccessfull = false;
+            this.fileStatus.push(fileStat);
           }
-        )
+        } else {
+          fileStat.StatusMessage = "Only 50Mb or lesser files are allowed.";
+          fileStat.IsSuccessfull = false;
+          this.fileStatus.push(fileStat);
+        }
       }
-
     } else {
       window.alert("Please select files to upload.");
     }

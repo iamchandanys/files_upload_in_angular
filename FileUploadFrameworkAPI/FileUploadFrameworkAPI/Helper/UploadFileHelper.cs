@@ -33,9 +33,9 @@ namespace FileUploadFrameworkAPI.Helper
                 {
                     directoryPath = Path.Combine(uploadFolderPath, DateTime.Now.ToString(WebConfigurationManager.AppSettings["DateFormat"].ToString(), CultureInfo.InvariantCulture));
 
-                    if (fileBase.ContentLength < 2000000)
+                    if (fileBase.ContentLength < 50000000)
                     {
-                        if (fileExtension == ".img" || fileExtension == ".pdf" || fileExtension == ".xlsx")
+                        if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" || fileExtension == ".pdf" || fileExtension == ".xlsx")
                         {
                             sourcePath = directoryPath + "\\" + fileBase.FileName;
 
@@ -60,13 +60,13 @@ namespace FileUploadFrameworkAPI.Helper
                         }
                         else
                         {
-                            fsm.StatusMessage = "Only Image, PDF and Excel files are allowed.";
+                            fsm.StatusMessage = "Only Image(.jpg/.jpeg), PDF and Excel files are allowed.";
                             fsm.IsSuccessfull = false;
                         }
                     }
                     else
                     {
-                        fsm.StatusMessage = "Only 2Mb files are allowed.";
+                        fsm.StatusMessage = "Only 50Mb or lesser files are allowed.";
                         fsm.IsSuccessfull = false;
                     }
                 }

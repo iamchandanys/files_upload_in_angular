@@ -3,5 +3,5 @@ export class FileStatus {
     FileSize: string;
     SourcePath: string;
     StatusMessage: string;
-    IsSuccessfull: number;
+    IsSuccessfull: boolean;
 }

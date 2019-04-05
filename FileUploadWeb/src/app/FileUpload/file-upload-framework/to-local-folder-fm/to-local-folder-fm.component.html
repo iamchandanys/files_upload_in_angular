@@ -1,41 +1,31 @@
 <div style="padding: 12px;">
 
   <div class="card">
-    <div class="card-header">
+    <div class="card-header bs-card-header">
       File Upload To Local Folder
     </div>
 
     <div class="card-body bs-card-body">
 
-      <table style="width: 100%;">
-        <tr>
-          <td width="50%">
-            <input type="file" id="FileUpload" (change)="onFileChange($event)" multiple accept=".pdf, .xlsx, .img" />
+      <input type="file" id="FileUpload" (change)="onFileChange($event)" multiple accept=".pdf, .xlsx, .jpg, .png" />
 
-            <p class="text-danger" style="font-weight: 600; margin-top: 6px;">
-              Only .xlsx, .img & .pdf files are allowed.
-            </p>
+      <p class="text-danger" style="font-weight: 600; margin-top: 6px;">
+        Only .jpg, .png, .pdf, & .xlsx files are allowed.
+      </p>
 
-            <button type="button" class="btn btn-primary btn-sm btn-upload" (click)="UploadFile()">Upload</button>
-          </td>
+      <button type="button" class="btn btn-primary btn-sm btn-upload" (click)="UploadFile()">Upload</button>
 
-          <td width="50%">
-            <p style="font-weight: 600;">
-              Uploading Files:
-              {{filesInProgress}}
-            </p>
-            <div class="progress bs-progress">
-              <div class="progress-bar progress-bar-success progress-bar-striped progress-bar-animated"
-                role="progressbar" [attr.aria-valuenow]="progress" aria-valuemin="0" aria-valuemax="100"
-                [style.width]="(progress/100)*100 + '%'">
-                <span *ngIf="progress > 0">{{progress}}%</span>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </table>
+      <br /><br/>
 
-      <br/>
+      <div class="progress">
+        <div class="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar"
+          [attr.aria-valuenow]="progress" aria-valuemin="0" aria-valuemax="100"
+          [style.width]="(progress/100)*100 + '%'">
+          <span *ngIf="progress > 0">{{progress}}%</span>
+        </div>
+      </div>
+
+      <br />
 
       <table class="table">
         <thead class="thead-light">

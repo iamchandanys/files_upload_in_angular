@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Http;
@@ -37,6 +38,45 @@ namespace FileUploadFrameworkAPI.Controllers
             catch (Exception ex)
             {
                 return Ok(fileStatusModel);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/UploadFiles/DownloadFilesFromLocalFolder")]
+        public HttpResponseMessage DownloadFilesFromLocalFolder([FromUri]string FilePath)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(FilePath))
+                {
+                    FileInfo file = new FileInfo(FilePath);
+
+                    var stream = new FileStream(file.FullName, FileMode.Open);
+
+                    HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                    response.Content = new StreamContent(stream);
+                    if (file.Extension == ".xlsx")
+                        response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                    if (file.Extension == ".pdf")
+                        response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
+                    if (file.Extension == ".jpg" || file.Extension == ".jpeg")
+                        response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+                    if (file.Extension == ".png")
+                        response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+                    response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+                    {
+                        FileName = file.Name
+                    };
+                    response.Content.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
+
+                    return response;
+                }
+
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+            catch (Exception ex)
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
         }
     }
