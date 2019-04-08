@@ -45,7 +45,7 @@
               {{x.FileSize}}
             </td>
             <td [ngClass]="{ 'table-success' : x.IsSuccessfull, 'table-danger' : !x.IsSuccessfull }">
-              <a href="#">{{x.SourcePath}}</a>
+              <a (click)="DownloadFile(x.SourcePath)">{{x.SourcePath}}</a>
             </td>
             <td [ngClass]="{ 'table-success' : x.IsSuccessfull, 'table-danger' : !x.IsSuccessfull }">
               {{x.StatusMessage}}

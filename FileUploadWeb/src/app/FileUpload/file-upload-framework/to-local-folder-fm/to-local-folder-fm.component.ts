@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { HttpRequest, HttpClient, HttpEventType, HttpResponse, HttpHeaders } from '@angular/common/http';
 
 import * as $ from 'jquery';
+import * as filesaver from 'file-saver';
 import { FileStatus } from '../models/file-status.model';
+import { ToLocalFolderService } from '../service/to-local-folder.service';
 
 @Component({
   selector: 'app-to-local-folder-fm',
@@ -12,7 +14,7 @@ import { FileStatus } from '../models/file-status.model';
 
 export class ToLocalFolderFmComponent implements OnInit {
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private toLocalFolderService: ToLocalFolderService) { }
 
   progress: number;
   selectedFiles: File[] = [];
@@ -85,6 +87,22 @@ export class ToLocalFolderFmComponent implements OnInit {
     } else {
       window.alert("Please select files to upload.");
     }
+  }
+
+  DownloadFile(downloadPath: any) {
+    this.toLocalFolderService.DownloadFilesFromLocalFolder(downloadPath).subscribe(
+      (res) => {
+        let fileName = "";
+        var contentDisposition = res.headers.get('content-disposition');
+
+        if (contentDisposition)
+          fileName = contentDisposition.split(';')[1].split('filename')[1].split('=')[1].trim().replace(/\"/g, "");
+
+        if (res.body) {
+          filesaver.saveAs(res.body, fileName);
+        }
+      }
+    )
   }
 
 }
