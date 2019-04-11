@@ -7,12 +7,12 @@ import { FileStatus } from '../models/file-status.model';
 import { ToLocalFolderService } from '../service/to-local-folder.service';
 
 @Component({
-  selector: 'app-to-local-folder-fm',
-  templateUrl: './to-local-folder-fm.component.html',
-  styleUrls: ['./to-local-folder-fm.component.sass']
+  selector: 'app-to-database-fm',
+  templateUrl: './to-database-fm.component.html',
+  styleUrls: ['./to-database-fm.component.sass']
 })
 
-export class ToLocalFolderFmComponent implements OnInit {
+export class ToDatabaseFmComponent implements OnInit {
 
   constructor(private httpClient: HttpClient, private toLocalFolderService: ToLocalFolderService) { }
 
@@ -53,14 +53,14 @@ export class ToLocalFolderFmComponent implements OnInit {
         fileStat.FileSize = sizeConversion + " Mb";
 
         //50000000 in bytes
-        if (selFiles.size < 50000000) {
+        if (selFiles.size < 2000000) {
 
           if (extension == 'xlsx' || extension == 'pdf' || extension == 'jpg' || extension == 'jpeg' || extension == "png") {
 
             const formData = new FormData();
             formData.append('UploadFile_' + selFiles.name, selFiles);
 
-            const req = new HttpRequest('POST', 'http://localhost:50182/api/UploadFiles/UploadFilesToLocalFolder', formData, { reportProgress: true });
+            const req = new HttpRequest('POST', 'http://localhost:50182/api/UploadFiles/UploadFilesToDatabase', formData, { reportProgress: true });
 
             this.httpClient.request(req).subscribe(
               (event: any) => {
@@ -90,8 +90,8 @@ export class ToLocalFolderFmComponent implements OnInit {
     }
   }
 
-  DownloadFile(downloadPath: any) {
-    this.toLocalFolderService.DownloadFilesFromLocalFolder(downloadPath).subscribe(
+  DownloadFile(Id: any) {
+    this.toLocalFolderService.DownloadFilesFromDatabase(Id).subscribe(
       (res) => {
         let fileName = "";
         var contentDisposition = res.headers.get('content-disposition');
